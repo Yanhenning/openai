@@ -6,7 +6,7 @@ from api.datastore_gateway.datastore_gateway import DatastoreGateway
 
 app = Flask(__name__)
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "apiconfig.json"
 
 
 @app.route('/')
