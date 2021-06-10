@@ -63,6 +63,9 @@ HEURISTIC_CONSTANT = 365.25
 
 
 def validate_birthdate(field, value, error):
+    if not value:
+        return
+
     birthdate = None
     if isinstance(value, datetime) or isinstance(value, date):
         birthdate = value

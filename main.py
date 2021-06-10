@@ -1,8 +1,10 @@
 import logging
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from flask import request
 
+from api.core.exceptions import ValidationError
+from api.core.user.create_user import insert_user
 from api.datastore_gateway.datastore_gateway import DatastoreGateway
 
 app = Flask(__name__)
@@ -30,9 +32,11 @@ def get_user(username):
 
 @app.post('/user')
 def create_user():
-    client_usuario = DatastoreGateway('usuario')
-    client_usuario.create(**request.json)
-    return 'Usuario criado'
+    try:
+        created_user = insert_user(request.json)
+    except ValidationError as context:
+        return jsonify(context.errors), 400
+    return created_user
 
 
 @app.errorhandler(500)
