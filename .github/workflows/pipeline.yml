@@ -1,4 +1,4 @@
-name: Flask tests CI
+name: Backend tests CI
 
 on:
   push:
