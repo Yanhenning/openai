@@ -1,4 +1,3 @@
-import unittest
 from datetime import datetime
 from unittest import TestCase
 from unittest.mock import patch, call
@@ -7,9 +6,6 @@ from api.datastore_gateway.datastore_gateway import DatastoreGateway, DefaultFie
 
 
 class DatastoreGatewayTests(TestCase):
-    def setUp(self):
-        pass
-
     @patch('api.datastore_gateway.datastore_gateway.datastore')
     def test_create_client(self, datastore_mock):
         DatastoreGateway(entity_type='usuario')
@@ -89,6 +85,25 @@ class DatastoreGatewayTests(TestCase):
         datastore_mock.Client().query().fetch.return_value = []
 
         self.assertIsNone(datastore_gateway.get_one())
+
+    @patch('api.datastore_gateway.datastore_gateway.datastore')
+    def test_get_by_entity_id(self, datastore_mock):
+        datastore_gateway = DatastoreGateway(entity_type='usuario')
+        datastore_mock.Client.key.return_value = {'id': 1}
+
+        entity = datastore_gateway.get_by_id(entity_id=1)
+
+        datastore_mock.Client().key.called_with(datastore_gateway.entity_type, 1, namespace=datastore_gateway.namespace)
+        datastore_mock.Client().get.called_with({'id': 1})
+
+    @patch('api.datastore_gateway.datastore_gateway.datastore')
+    def test_return_entity_by_id(self, datastore_mock):
+        datastore_gateway = DatastoreGateway(entity_type='usuario')
+        datastore_mock.Client().get.return_value = {'id': 1}
+
+        entity = datastore_gateway.get_by_id(entity_id=1)
+
+        self.assertEqual({'id': 1}, entity)
 
 
 class DatastoreGatewayCreateTests(TestCase):
