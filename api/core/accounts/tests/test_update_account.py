@@ -7,9 +7,11 @@ from api.core.exceptions import EntityDoesNotExist
 
 class UpdateAccountTests(TestCase):
 
+    @patch('api.core.accounts.update_account.DatastoreGateway.__init__')
     @patch('api.core.accounts.update_account.DatastoreGateway.get_by_id')
     @patch('api.core.accounts.update_account.DatastoreGateway.update')
-    def test_update_account(self, update_mock, get_by_id_mock):
+    def test_update_account(self, update_mock, get_by_id_mock, init_mock):
+        init_mock.return_value = None
         account_id = 1
         get_by_id_mock.return_value = {'id': account_id, 'fullName': 'Zé silva'}
         new_data = {'fullName': 'Zé da silva'}
@@ -18,8 +20,10 @@ class UpdateAccountTests(TestCase):
 
         update_mock.assert_called_with(account_id, **new_data)
 
+    @patch('api.core.accounts.update_account.DatastoreGateway.__init__')
     @patch('api.core.accounts.update_account.DatastoreGateway.get_by_id')
-    def test_throw_exception_when_account_does_not_exist(self, get_by_id_mock):
+    def test_throw_exception_when_account_does_not_exist(self, get_by_id_mock, init_mock):
+        init_mock.return_value = None
         account_id = 1
         get_by_id_mock.return_value = None
         new_data = {'fullName': 'Zé da silva'}

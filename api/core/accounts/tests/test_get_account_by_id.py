@@ -5,8 +5,10 @@ from api.core.accounts.get_account_by_id import get_account_by_id
 
 
 class GetAccountByIdTests(TestCase):
+    @patch('api.core.accounts.get_account_by_id.DatastoreGateway.__init__')
     @patch('api.core.accounts.get_account_by_id.DatastoreGateway.get_by_id')
-    def test_return_accounts(self, get_by_id_mock):
+    def test_return_accounts(self, get_by_id_mock, init_mock):
+        init_mock.return_value = None
         account_id = 1
         get_by_id_mock.return_value = {'id': account_id}
 
@@ -15,8 +17,10 @@ class GetAccountByIdTests(TestCase):
         self.assertEqual({'id': account_id}, result)
         get_by_id_mock.assert_called_with(account_id)
 
+    @patch('api.core.accounts.get_account_by_id.DatastoreGateway.__init__')
     @patch('api.core.accounts.get_account_by_id.DatastoreGateway.get_by_id')
-    def test_validate_id(self, get_by_id_mock):
+    def test_validate_id(self, get_by_id_mock, init_mock):
+        init_mock.return_value = None
         account_id = 1
         get_by_id_mock.return_value = {'id': account_id}
 

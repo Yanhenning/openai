@@ -7,9 +7,11 @@ from api.core.exceptions import ValidationError
 
 class CreateAccountTests(TestCase):
 
+    @patch('api.core.accounts.create_account.DatastoreGateway.__init__')
     @patch('api.core.accounts.create_account.DatastoreGateway.get_one')
     @patch('api.core.accounts.create_account.DatastoreGateway.create')
-    def test_create_account(self, create_mock, get_one_mock):
+    def test_create_account(self, create_mock, get_one_mock, init_mock):
+        init_mock.return_value = None
         data = {
             "document": "15380060064",
             "fullName": "Jurandir",
@@ -29,9 +31,11 @@ class CreateAccountTests(TestCase):
         ])
         self.assertEqual(1, result['id'])
 
+    @patch('api.core.accounts.create_account.DatastoreGateway.__init__')
     @patch('api.core.accounts.create_account.DatastoreGateway.get_one')
     @patch('api.core.accounts.create_account.DatastoreGateway.create')
-    def test_dont_create_an_account_when_already_exists_a_account_with_given_document(self, create_mock, get_one_mock):
+    def test_dont_create_an_account_when_already_exists_a_account_with_given_document(self, create_mock, get_one_mock, init_mock):
+        init_mock.return_value = None
         data = {
             "document": "15380060064",
             "fullName": "Jurandir",
@@ -53,9 +57,11 @@ class CreateAccountTests(TestCase):
         self.assertIn('document', context.exception.errors)
         self.assertIn('Document already registered', context.exception.errors['document'])
 
+    @patch('api.core.accounts.create_account.DatastoreGateway.__init__')
     @patch('api.core.accounts.create_account.DatastoreGateway.get_one')
     @patch('api.core.accounts.create_account.DatastoreGateway.create')
-    def test_dont_create_an_account_when_already_exists_a_account_with_given_email(self, create_mock, get_one_mock):
+    def test_dont_create_an_account_when_already_exists_a_account_with_given_email(self, create_mock, get_one_mock, init_mock):
+        init_mock.return_value = None
         data = {
             "document": "15380060064",
             "fullName": "Jurandir",
