@@ -146,12 +146,12 @@ class DatastoreGatewayCreateTests(TestCase):
 
 class DatastoreGatewayUpdateTests(TestCase):
     @patch('api.datastore_gateway.datastore_gateway.datastore')
-    def test_get_entity_with_key(self, datastore_mock):
+    def test_get_entity_by_id(self, datastore_mock):
         datastore_gateway = DatastoreGateway(entity_type='usuario')
 
-        datastore_gateway.update(key='key')
+        datastore_gateway.update(entity_id=1)
 
-        datastore_mock.Entity.assert_called_with(key='key')
+        datastore_mock.Client().key.assert_called_with(datastore_gateway.entity_type, 1, namespace=datastore_gateway.namespace)
 
     @patch('api.datastore_gateway.datastore_gateway.datastore')
     def test_send_entity_to_datastore(self, datastore_mock):

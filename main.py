@@ -14,11 +14,6 @@ app = Flask(__name__)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "apiconfig.json"
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!3'
-
-
 @app.get('/account/<int:account_id>')
 @error_handler
 def get_account(account_id):
@@ -47,7 +42,7 @@ def edit_account(account_id):
     return {'account_id': account_id}, 204
 
 
-@app.delete('/account/<int:account_id>')
+@app.put('/account/<int:account_id>/delete')
 @error_handler
 def delete_account(account_id):
     return f'Account (id: {account_id}) deleted'

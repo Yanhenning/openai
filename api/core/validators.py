@@ -23,7 +23,7 @@ def validate_id(field, value, error):
 
 
 def validator_entity_id(entity_id):
-    schema = {'id': {'type': 'integer', 'check_with': validate_document, 'coerce': int}}
+    schema = {'id': {'type': 'integer', 'check_with': validate_id, 'coerce': int}}
     validator = Validator(schema, purge_unknown=True)
     validator.validate({'id': entity_id})
 
@@ -36,7 +36,7 @@ def validator_entity_id(entity_id):
 
 def validate_document(field, value, error):
     try:
-        if not value.isdigit():
+        if isinstance(value, str) and not value.isdigit():
             value = strip_points(value)
         try:
             int(value)

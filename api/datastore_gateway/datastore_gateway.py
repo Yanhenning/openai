@@ -13,7 +13,7 @@ class DatastoreGateway:
     def __init__(self, entity_type, namespace='development'):
         self.namespace = namespace
         self.entity_type = entity_type
-        self.client = datastore.Client()
+        self.client = datastore.Client(namespace=self.namespace)
 
     def get(self, **filters):
         query = self.client.query(kind=self.entity_type, namespace=self.namespace)
@@ -28,6 +28,10 @@ class DatastoreGateway:
         if results:
             return results[0]
         return
+
+    def get_by_id(self, entity_id):
+        key = self.client.key(self.entity_type, entity_id, namespace=self.namespace)
+        return self.client.get(key)
 
     def create(self, **data):
         with self.client.transaction():
@@ -46,9 +50,9 @@ class DatastoreGateway:
             self.client.put(entity)
         return entity.id
 
-    def update(self, key, **data):
+    def update(self, entity_id, **data):
         with self.client.transaction():
-            entity = datastore.Entity(key=key)
+            entity = self.get_by_id(entity_id)
 
             for key, value in data.items():
                 entity[key] = value
