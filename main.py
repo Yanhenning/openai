@@ -29,11 +29,14 @@ def get_user(username):
 @app.post('/user')
 @error_handler
 def create_user():
-    try:
-        created_user = insert_user(request.json)
-    except ValidationError as context:
-        return jsonify(context.errors), 400
+    created_user = insert_user(request.json)
     return created_user, 200
+
+
+@app.post('/user/createWithList')
+@error_handler
+def create_user_with_list():
+    return 'users created'
 
 
 @app.put('/user/<string:username>')
@@ -41,6 +44,12 @@ def create_user():
 def edit_user(username):
     username = update_user(username, request.json or {})
     return {'username': username}, 200
+
+
+@app.delete('/user/<string:username>')
+@error_handler
+def delete_user(username):
+    return f'${username} deleted'
 
 
 @app.errorhandler(500)
