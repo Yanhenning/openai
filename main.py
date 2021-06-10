@@ -1,6 +1,7 @@
 import logging
 import os
 from flask import Flask
+from flask import request
 
 from api.datastore_gateway.datastore_gateway import DatastoreGateway
 
@@ -23,11 +24,14 @@ def hello_world2():
 
 @app.get('/user/<string:username>')
 def get_user(username):
-    return f'Usuario retornado {username}'
+    client_usuario = DatastoreGateway('usuario')
+    return client_usuario.get(username=('=', username))
 
 
 @app.post('/user')
 def create_user():
+    client_usuario = DatastoreGateway('usuario')
+    client_usuario.create(**request.json)
     return 'Usuario criado'
 
 

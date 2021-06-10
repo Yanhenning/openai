@@ -10,26 +10,24 @@ class DefaultFieldsEnum:
 
 
 class DatastoreGateway:
-    def __init__(self, entity_type, namespace='usuario'):
+    def __init__(self, entity_type, namespace='development'):
         self.namespace = namespace
         self.entity_type = entity_type
         self.client = datastore.Client()
 
-    def mount_complete_key(self, **filters: dict):
-        args = []
+    def get(self, **filters):
+        query = self.client.query(kind=self.entity_type, namespace=self.namespace)
+        query_filters = [(key, value[0], value[1]) for key, value in filters.items()]
+        for query_filter in query_filters:
+            query.add_filter(*query_filter)
 
-        for key, value in filters.items():
-            args.append(key)
-            args.append(value)
+        return list(query.fetch())
 
-        return self.client.key(*tuple(args))
-
-    def get_all(self):
-        pass
-
-    def get(self, **filters: dict):
-        key = self.mount_complete_key(**filters)
-        return self.client.get(key)
+    def get_one(self, **filters):
+        results = self.get(**filters)
+        if results:
+            return results[0]
+        return
 
     def create(self, **data):
         with self.client.transaction():
@@ -47,9 +45,8 @@ class DatastoreGateway:
             entity.update(entity_data)
             self.client.put(entity)
 
-    def update(self, filters: dict, **data):
+    def update(self, key, **data):
         with self.client.transaction():
-            key = self.mount_complete_key(**filters)
             entity = datastore.Entity(key=key)
 
             for key, value in data.items():
