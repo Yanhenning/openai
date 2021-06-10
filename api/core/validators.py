@@ -12,7 +12,29 @@ def divisor(v):
     return 0
 
 
-def validate_cpf(field, value, error):
+def validate_id(field, value, error):
+    try:
+        value = int(value)
+    except ValueError:
+        error(field, 'Cannot convert the value to integer')
+
+    if value <= 0:
+        error(field, 'Id must be greater than 0')
+
+
+def validator_entity_id(entity_id):
+    schema = {'id': {'type': 'integer', 'check_with': validate_document, 'coerce': int}}
+    validator = Validator(schema, purge_unknown=True)
+    validator.validate({'id': entity_id})
+
+    if validator.errors:
+        if validator.errors:
+            raise ValidationError(validator.errors)
+
+    return validator.document['id']
+
+
+def validate_document(field, value, error):
     try:
         if not value.isdigit():
             value = strip_points(value)
@@ -84,23 +106,20 @@ def strip_points(value):
     return re.sub('[-\.\s]', '', value)
 
 
-def get_user_schema(is_insertion=True):
+def get_account_schema(is_insertion=True):
     return {
-        "cpf": {"type": "string", "required": is_insertion, 'check_with': validate_cpf, 'coerce': strip_points},
-        "username": {"type": "string", "required": is_insertion, 'empty': False},
-        "firstName": {"type": "string", "required": is_insertion, 'empty': False},
-        "lastName": {"type": "string", "required": is_insertion, 'empty': False},
+        "document": {"type": "string", "required": is_insertion, 'check_with': validate_document, 'coerce': strip_points},
+        "username": {"type": "string", "required": False, 'empty': False},
+        "fullName": {"type": "string", "required": is_insertion, 'empty': False},
         "email": {"type": "string", "required": is_insertion, 'check_with': validate_email, 'empty': False},
-        "password": {"type": "string", "required": is_insertion, 'empty': False},
         "phone": {"type": "string", "required": is_insertion, 'check_with': validate_phone},
-        "birthdate": {"type": "string", "required": is_insertion, 'check_with': validate_birthdate},
-        "userStatus": {"type": "integer", 'coerce': int, "required": is_insertion}
+        "birthDate": {"type": "string", "required": is_insertion, 'check_with': validate_birthdate},
     }
 
 
-def validate_user(data, is_insertion=True):
-    user_schema = get_user_schema(is_insertion)
-    validator = Validator(user_schema, purge_unknown=True)
+def validate_account(data, is_insertion=True):
+    account_schema = get_account_schema(is_insertion)
+    validator = Validator(account_schema, purge_unknown=True)
     validator.validate(data)
 
     if validator.errors:
@@ -109,9 +128,9 @@ def validate_user(data, is_insertion=True):
     return validator.document
 
 
-def validate_user_creation(data):
-    return validate_user(data, is_insertion=True)
+def validate_account_creation(data):
+    return validate_account(data, is_insertion=True)
 
 
-def validate_user_uptade(data):
-    return validate_user(data, is_insertion=False)
+def validate_account_uptade(data):
+    return validate_account(data, is_insertion=False)

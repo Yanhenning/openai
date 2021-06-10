@@ -3,11 +3,11 @@ import os
 from flask import Flask, jsonify
 from flask import request
 
-from api.core.exceptions import ValidationError
+from api.core.accounts.update_account import update_account
 from api.core.request_decorators import error_handler
-from api.core.user.get_user_by_username import get_user_by_username
-from api.core.user.insert_user import insert_user
-from api.core.user.update_user import update_user
+from api.core.accounts.get_accounts import get_accounts
+from api.core.accounts.get_account_by_id import get_account_by_id
+from api.core.accounts.insert_account import insert_account
 
 app = Flask(__name__)
 
@@ -19,37 +19,38 @@ def hello_world():
     return 'Hello, World!3'
 
 
-@app.get('/user/<string:username>')
+@app.get('/account/<int:account_id>')
 @error_handler
-def get_user(username):
-    user = get_user_by_username(username)
-    return user, 200
+def get_account(account_id):
+    account = get_account_by_id(account_id)
+    return account, 200
 
 
-@app.post('/user')
+@app.get('/accounts')
 @error_handler
-def create_user():
-    created_user = insert_user(request.json)
-    return created_user, 200
+def get_all_accounts():
+    accounts = get_accounts()
+    return jsonify(accounts), 200
 
 
-@app.post('/user/createWithList')
+@app.post('/account')
 @error_handler
-def create_user_with_list():
-    return 'users created'
+def create_account():
+    created_account = insert_account(request.json)
+    return created_account, 200
 
 
-@app.put('/user/<string:username>')
+@app.put('/account/<int:account_id>')
 @error_handler
-def edit_user(username):
-    username = update_user(username, request.json or {})
-    return {'username': username}, 200
+def edit_account(account_id):
+    update_account(account_id, request.json or {})
+    return {'account_id': account_id}, 204
 
 
-@app.delete('/user/<string:username>')
+@app.delete('/account/<int:account_id>')
 @error_handler
-def delete_user(username):
-    return f'${username} deleted'
+def delete_account(account_id):
+    return f'Account (id: {account_id}) deleted'
 
 
 @app.errorhandler(500)

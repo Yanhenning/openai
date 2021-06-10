@@ -23,7 +23,7 @@ class ErrorHandlerTests(TestCase):
 
     @patch('api.core.request_decorators.jsonify')
     def test_return_404_when_catchs_entity_does_not_exist(self, jsonify_mock):
-        user_error = {'user': ['User does not exists']}
+        user_error = {'accounts': ['User does not exists']}
         jsonify_mock.return_value = {'errors': user_error}
 
         @error_handler
@@ -38,14 +38,14 @@ class ErrorHandlerTests(TestCase):
 
     @patch('api.core.request_decorators.jsonify')
     def test_return_wrapped_function_result(self, jsonify_mock):
-        user_error = {'user': ['User does not exists']}
+        user_error = {'accounts': ['User does not exists']}
         jsonify_mock.return_value = {'errors': user_error}
 
         @error_handler
         def fn(request):
-            return {'user': 'Yan'}, 200
+            return {'accounts': 'Yan'}, 200
 
         result, status_code = fn(1)
 
         self.assertEqual(200, status_code)
-        self.assertEqual({'user': 'Yan'}, result)
+        self.assertEqual({'accounts': 'Yan'}, result)

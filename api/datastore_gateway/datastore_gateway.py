@@ -44,6 +44,7 @@ class DatastoreGateway:
 
             entity.update(entity_data)
             self.client.put(entity)
+        return entity.id
 
     def update(self, key, **data):
         with self.client.transaction():
