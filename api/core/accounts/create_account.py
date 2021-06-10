@@ -3,7 +3,7 @@ from api.core.validators import validate_account_creation
 from api.datastore_gateway.datastore_gateway import DatastoreGateway
 
 
-def insert_account(data):
+def create_account(data):
     validated_account = validate_account_creation(data)
     datastore_gateway = DatastoreGateway('account')
 
@@ -13,7 +13,7 @@ def insert_account(data):
     if account_document:
         errors['document'] = ['Document already registered']
     if account_email:
-        errors['email'] = ['E-mail is already used']
+        errors['email'] = ['E-mail already registered']
     if errors:
         raise ValidationError(errors)
 

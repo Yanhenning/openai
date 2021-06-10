@@ -60,5 +60,5 @@ class DatastoreGateway:
 
             self.client.put(entity)
 
-    def delete(self, **filters):
-        self.update(filters, excluded=True)
+    def delete(self, entity_id):
+        self.update(entity_id, excluded=True)
