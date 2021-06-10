@@ -1,1 +1,1 @@
-![example workflow](https://github.com/Yanhenning/openai/actions/workflows/pipeline.yml/badge.svg)
+![example workflow](https://github.com/Yanhenning/openai/actions/workflows/pipeline.yml/badge.svg) [![codecov](https://codecov.io/gh/Yanhenning/openai/branch/master/graph/badge.svg?token=KPXVj0KgXn)](https://codecov.io/gh/Yanhenning/openai)
