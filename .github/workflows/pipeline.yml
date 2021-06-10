@@ -32,10 +32,11 @@ jobs:
         run: |
           python -m unittest
 
-      - name: Gerar coverage report
+      - name: Generate Report
         run: |
-          pip install pytest
           pip install coverage
-          pip install pytest-cov
-          pytest --cov=./ --cov-report=xml
-          coverage run
+          coverage run -m unittest
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
