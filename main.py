@@ -15,18 +15,18 @@ app = Flask(__name__)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "apiconfig.json"
 
 
-@app.get('/account/<int:account_id>')
-@error_handler
-def get_account_view(account_id):
-    account = get_account_by_id(account_id)
-    return account, 200
-
-
 @app.get('/accounts')
 @error_handler
 def get_all_accounts_view():
     accounts = get_accounts()
     return jsonify(accounts), 200
+
+
+@app.get('/account/<int:account_id>')
+@error_handler
+def get_account_view(account_id):
+    account = get_account_by_id(account_id)
+    return account, 200
 
 
 @app.post('/account')
