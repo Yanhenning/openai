@@ -32,11 +32,9 @@ jobs:
       run: |
         python -m unittest
 
-    - name: Setup Cloud SDK
+    - name: Deploy to App Engine
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
-
-    - name: Deploy to App Engine
       run: gcloud app deploy app.yaml --quiet --no-promote --version v1
