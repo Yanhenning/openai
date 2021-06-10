@@ -32,9 +32,6 @@ jobs:
       run: |
         python -m unittest
 
-    - id: Deploy
-      uses: google-github-actions/deploy-appengine@main
-
     - name: Setup Cloud SDK
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
