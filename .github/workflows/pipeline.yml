@@ -34,7 +34,8 @@ jobs:
 
       - name: Gerar coverage report
         run: |
-
           pip install pytest
+          pip install coverage
           pip install pytest-cov
           pytest --cov=./ --cov-report=xml
+          coverage run
