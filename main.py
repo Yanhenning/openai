@@ -1,7 +1,7 @@
 import logging
 import os
-from flask import Flask, jsonify
-from flask import request
+from flask import Flask, jsonify, request
+
 
 from api.core.accounts.delete_account import delete_account
 from api.core.accounts.update_account import update_account
@@ -13,6 +13,50 @@ from api.core.accounts.create_account import create_account
 app = Flask(__name__)
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "apiconfig.json"
+
+
+@app.get('/')
+@error_handler
+def home():
+    rotas = [
+        {
+            'method': 'POST',
+            'url': '/account',
+            'data':
+                {
+                    "document": "string",
+                    "fullName": "string",
+                    "email": "string",
+                    "phone": "string",
+                    "birthDate": "string"
+                }
+        },
+        {
+            'method': 'GET',
+            'url': '/accounts'
+        },
+        {
+            'method': 'GET',
+            'url': '/account/id'
+        },
+        {
+            'method': 'PUT',
+            'url': '/account/id',
+            'data':
+                {
+                    "document": "string",
+                    "fullName": "string",
+                    "email": "string",
+                    "phone": "string",
+                    "birthDate": "string"
+                }
+        },
+        {
+            'method': 'PUT',
+            'url': '/account/id/delete'
+        },
+    ]
+    return jsonify(rotas), 200
 
 
 @app.get('/accounts')
